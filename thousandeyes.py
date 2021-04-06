@@ -79,27 +79,17 @@ def delete_test(testType:str, testId: str):
     status = post(f"tests/{testType}/{testId}/delete", "")
     print(status)
 
-################################################################
-#                       Endpoint Tests                         # 
-################################################################
+
+def enable_test(testType:str, testId: str):
+    data = {"enabled": 1}
+    test_details = post(f"tests/{testType}/{testId}/update", data)['test'][0]
+    return(test_details)
 
 
-def get_endpoint_test_list():
-    endpoint_test_list = get("endpoint-tests.json")['endpointTest']
-    return(endpoint_test_list)
-
-
-def get_endpoint_test_list_by_type(test_type: str):
-    endpoint_test_list = get(f"endpoint-tests/{test_type}.json")['endpointTest']
-    return(endpoint_test_list)
-
-
-def get_endpoint_test_details(testId: str):
-    endpoint_test_details = get(f"endpoint-tests/{testId}.json")['endpointTest']
-    return(endpoint_test_details)
-
-
-# TODO: Create an endpoint test
+def disable_test(testType:str, testId: str):
+    data = {"enabled": 0}
+    test_details = post(f"tests/{testType}/{testId}/update", data)['test'][0]
+    return(test_details)
 
 
 ################################################################
@@ -124,6 +114,30 @@ def create_instant_test(testType: str, data: dict):
     """
     instant_test_details = post(f"instant/{testType}", data)
     return(instant_test_details['test'][0])
+
+
+################################################################
+#                       Endpoint Tests                         # 
+################################################################
+
+
+def get_endpoint_test_list():
+    endpoint_test_list = get("endpoint-tests.json")['endpointTest']
+    return(endpoint_test_list)
+
+
+def get_endpoint_test_list_by_type(test_type: str):
+    endpoint_test_list = get(f"endpoint-tests/{test_type}.json")['endpointTest']
+    return(endpoint_test_list)
+
+
+def get_endpoint_test_details(testId: str):
+    endpoint_test_details = get(f"endpoint-tests/{testId}.json")['endpointTest']
+    return(endpoint_test_details)
+
+
+# TODO: Create an endpoint test
+
 
 ################################################################
 #               Setting up the environment                     # 
