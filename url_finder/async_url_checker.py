@@ -1,6 +1,6 @@
 import asyncio
 from time import ctime
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, ClientConnectorCertificateError
 
 async def fetch(domain, session):
     print(f"Checking: {domain}")
@@ -13,6 +13,17 @@ async def fetch(domain, session):
                     f.write(f"{domain}\n")
 
             return await response.read()
+
+    except ClientConnectorCertificateError as e:
+        async with session.get(f"http://{domain}", timeout=timeout, ssl=False) as response:
+            if response.status == 200:
+                print(f"\033[1;31mDomain {domain} is accessible\033[0m")
+                responding_domains.append(domain)
+                with open(f'./output/{investigated_domain}-responding.txt', 'a') as f:
+                    f.write(f"{domain}\t\t\tUntrusted Certificate\n")
+
+            return await response.read()
+
     except:
         return(None)
 
