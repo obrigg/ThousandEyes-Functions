@@ -1,4 +1,5 @@
 import asyncio
+import argparse
 from time import ctime
 from aiohttp import ClientSession, ClientTimeout, ClientConnectorCertificateError
 
@@ -50,22 +51,30 @@ async def run():
         responses = asyncio.gather(*tasks)
         await responses
 
+if __name__ == '__main__':
 
-# Get list of domains to check
-filename = input("Kindly provide the path/filename for a domain list: ")
-with open(filename, 'r') as f:
-    domains_to_check = f.read().splitlines()
+    # Getting a domain to query, either from an argument, a file,  or from user's input
+    parser = argparse.ArgumentParser(description='ThousandEyes URL checker')
+    parser.add_argument('--file', help="file with domains to investigate", type=str)
+    args = parser.parse_args()
 
-investigated_domain = filename[filename.rfind("/")+1 : filename.rfind(".txt")]
-responding_domains = []
-batch = 25
-timeout = ClientTimeout(total=5)
-t0 = ctime()
+    if args.file is not None:
+        filename = args.file
+    else: 
+        filename = input("Kindly provide the path/filename for a domain list: ")
+    with open(filename, 'r') as f:
+        domains_to_check = f.read().splitlines()
 
-loop = asyncio.get_event_loop()
-future = asyncio.ensure_future(run())
-loop.run_until_complete(future)
+    investigated_domain = filename[filename.rfind("/")+1 : filename.rfind(".txt")]
+    responding_domains = []
+    batch = 25
+    timeout = ClientTimeout(total=5)
+    t0 = ctime()
 
-t1 = ctime()
-print(f"\n\n{len(responding_domains)} out of {len(domains_to_check)} domains have responded.")
-print(f"Started at: {t0}\nFinished at:{t1}")
+    loop = asyncio.get_event_loop()
+    future = asyncio.ensure_future(run())
+    loop.run_until_complete(future)
+
+    t1 = ctime()
+    print(f"\n\n{len(responding_domains)} out of {len(domains_to_check)} domains have responded.")
+    print(f"Started at: {t0}\nFinished at:{t1}")
