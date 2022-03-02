@@ -72,9 +72,11 @@ if __name__ == '__main__':
 
     # Getting a domain to query, either from an argument, a file,  or from user's input
     parser = argparse.ArgumentParser(description='ThousandEyes & Umbrella URL locator')
-    parser.add_argument('--domain', help="domain to investigate", type=str)
-    parser.add_argument('--file', help="file with domains to investigate", type=str)
-    parser.add_argument('--cont', help="continuing a previous run? True/False", type=bool, default=False)
+    parser.add_argument('--domain', help="Domain to investigate", type=str)
+    parser.add_argument('--file', help="File with domains to investigate", type=str)
+    parser.add_argument('--cont', help="Continuing a previous run? True/False. \
+    This requires the '--domain' and '--file' attributes to be specified. \
+    e.g. python url_finder_and_checker.py --domain cnn.com --cont True --file ./output/cnn.com.txt", type=bool, default=False)
     args = parser.parse_args()
     if args.file is not None:
         with open(args.file, 'r') as f:
